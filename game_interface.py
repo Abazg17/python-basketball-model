@@ -1,3 +1,4 @@
+from globals import Const
 # для всего интерфейса
 import tkinter as tk
 # свой файл
@@ -98,12 +99,12 @@ class InteractiveWindow:
 
     # меняет время периода в окне    
     def change_time(self, time):
-        min = time // 60
-        sec = time % 60
+        min = time // Const.kSecInMin
+        sec = time % Const.kSecInMin
         self.time_label.config(text="Время: {:02d}:{:02d}".format(min, sec))
 
     # меняет время атаки в окне
-    def change_attack_time(self, time = 24):
+    def change_attack_time(self, time = Const.kBaseAttackTime):
         self.attack_time_label.config(text="Время атаке: {:02d}'".format(time))
 
     # меняет счет
