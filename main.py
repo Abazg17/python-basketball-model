@@ -12,5 +12,6 @@ if __name__ == '__main__':
     # создаем объекты
     first = teams.Teams(stats_array, team[0] + 1)
     second = teams.Teams(stats_array, team[1] + 1)
+    print (first, second)
     # начинаем игру
     game_interface.start(first, second, type)
