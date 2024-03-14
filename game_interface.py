@@ -247,7 +247,7 @@ class InteractiveWindow:
             canvas.create_text(x3 + 5, (y1 + y2) / 2, anchor=tk.W, text=f"{value2:.0f}")
 
 # функция, создающая главное окно и выводящая его на экран
-def start(name1, name2,type):
+def start(name1, name2, type):
     root = tk.Tk()
     app = InteractiveWindow(root,type, name1, name2)
     root.mainloop()
