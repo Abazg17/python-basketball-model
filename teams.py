@@ -60,7 +60,6 @@ class Teams:
         self.stats[8][1] += 1
         self.stats[8][0] += int(success)
 
-    # красивый вывод статистики команды
     def __str__(self):
         return f"Player: {self.name}\n" \
             f"Field Point Percentage: {self.field_point}\n" \
