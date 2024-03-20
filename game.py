@@ -15,6 +15,8 @@ class NewAttackException(Exception):
             now_game.passes_now = 1
             now_game.possession = not now_game.possession
             now_game.exception = True
+    def __str__(self):
+        return ''
 
 # вызывает функции из файла, отвечающего за само окно, меняющее время
 # также сбрасывает атаку и передает владение, если время закончилось
@@ -102,11 +104,12 @@ class Game:
         self.passes_now = 1
         self.type = type
         self.time_exp = False
+        self.my_team = team1
     
     # обновляет период и, соответственно, время и фолы, 
-    def new_period(self):
+    def new_period(self, extra = False):
         self.window.change_period(self.score, self.period)
-        self.period += 1
+        self.period += 1 * (not extra)
         self.time = Const.kBasePeriodTime
         self.attack_time = Const.kBaseAttackTime
         self.fouls = [0,0]
@@ -118,6 +121,7 @@ class Game:
     # возвращает объект соперника по объекту нашей команды
     def against_team(self, team):
         a = [key for key,value in self.team_to_int.items() if value != self.team_to_int[team]][0]
+        self.my_team = a
         return (a)
 
     # функция для типа игры "случайная". Выбирает действие команды в обороне. Затем передается это 
@@ -302,6 +306,7 @@ class Player_attack:
     def try_pass(cls, now_game, team, bonus_def = 1):
         # проверка на то, был ли отбор
         now_game.block_pass(now_game.against_team(team), bonus_def)
+        now_game.window.add_log(now_game.score, "Хороший пас! ({})".format(now_game.comands_name[now_game.possession]))
         dec_time = random.randint(1,2)
         big_time_change (now_game, dec_time)
         now_game.passes_now += 1
@@ -382,12 +387,14 @@ def start_period(now_game, type):
 
 # главная функция файла. Создает объект игры и генерирует игру в 4 периодах и затем, пока равных счет
 # затем вызывает функцию, которая выводит статистику 
-def start_game(type, first, second, window):
-    now_game = Game(first, second, window, type)
+def start_game(type, first, second, window, now_game):
     for period in range(Const.kPeriodNumber):
         now_game.new_period()
-        window.button_start_period(now_game, type, period + 1)
+        window.interface_start_period(now_game, type, period + 1)
+    
     while (now_game.score[0] == now_game.score[1]):
         now_game.new_period()
-        window.button_start_period(now_game, type, now_game.period)
-    window.after_game(first, second, now_game.score)
+        window.interface_start_period(now_game, type, now_game.period)
+
+    window.stats(now_game)
+    return now_game.score 
